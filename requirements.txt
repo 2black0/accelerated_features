@@ -1,5 +1,4 @@
 opencv-contrib-python-headless==4.10.0.84
-poselib
-kornia==0.7.2
+kornia==0.6.12
 tqdm
-gdown
+

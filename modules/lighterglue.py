@@ -1,8 +1,8 @@
+import os
+import warnings
 
-from kornia.feature.lightglue import LightGlue
 from torch import nn
 import torch
-import os
 
 class LighterGlue(nn.Module):
     """
@@ -28,6 +28,15 @@ class LighterGlue(nn.Module):
 
     def __init__(self, weights = os.path.abspath(os.path.dirname(__file__)) + '/../weights/xfeat-lighterglue.pt'):
         super().__init__()
+        # Suppress FutureWarning from Kornia's LightGlue AMP decorator on import
+        warnings.filterwarnings(
+            "ignore",
+            category=FutureWarning,
+            message=r"`torch.cuda.amp.custom_fwd\(args\.\.\.\)` is deprecated",
+        )
+        # Lazy import to apply warning filter before import side-effects
+        from kornia.feature.lightglue import LightGlue
+
         LightGlue.default_conf = self.default_conf_xfeat
         self.net = LightGlue(None)
         self.dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -49,8 +58,7 @@ class LighterGlue(nn.Module):
         self.net.to(self.dev)
 
     @torch.inference_mode()
-    def forward(self, data, min_conf = 0.1):
-        self.net.conf.filter_threshold = min_conf
+    def forward(self, data):
         result = self.net( {   'image0': {'keypoints': data['keypoints0'], 'descriptors': data['descriptors0'], 'image_size': data['image_size0']},
                                'image1': {'keypoints': data['keypoints1'], 'descriptors': data['descriptors1'], 'image_size': data['image_size1']}  
                            } )

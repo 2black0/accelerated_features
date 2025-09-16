@@ -29,7 +29,12 @@ class FrameGrabber(threading.Thread):
     def __init__(self, cap):
         super().__init__()
         self.cap = cap
-        _, self.frame = self.cap.read()
+        ret, frame = self.cap.read()
+        if not ret:
+            print("Can't receive initial frame (check --cam index/permissions).")
+            self.frame = None
+        else:
+            self.frame = frame
         self.running = False
 
     def run(self):
@@ -38,6 +43,8 @@ class FrameGrabber(threading.Thread):
             ret, frame = self.cap.read()
             if not ret:
                 print("Can't receive frame (stream ended?).")
+                sleep(0.1)
+                continue
             self.frame = frame
             sleep(0.01)
 

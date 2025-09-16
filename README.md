@@ -9,6 +9,7 @@
 
 - Training code is now available -> [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/verlab/accelerated_features/blob/main/notebooks/XFeat_training_example.ipynb)
 - 🎉 **New!** XFeat + LighterGlue (smaller version of LightGlue) available! 🚀 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/verlab/accelerated_features/blob/main/notebooks/xfeat%2Blg_torch_hub.ipynb)
+- ✅ LightGlue integrations now patch Kornia's deprecated AMP decorators automatically, removing the PyTorch FutureWarning on modern releases.
 
 <div align="center" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
   <div style="display: flex; justify-content: space-around; width: 100%;">
@@ -157,33 +158,7 @@ python3 -m modules.training.train --training_type xfeat_default  --megadepth_roo
 ```
 
 ### Evaluation
-----
-**MegaDepth-1500**
-
-Please note that due to the stochastic nature of RANSAC and major code refactoring, you may observe slightly different AuC results; however, they should be very close to those reported in the paper.
-
-To evaluate on the MegaDepth dataset, you need to first get the dataset:
-```bash
-python3 -m modules.dataset.download --megadepth-1500 --download_dir </path/to/desired/folder>
-```
-Then, you call the mega1500 eval script, you can choose between `xfeat, xfeat-star and alike`. It should take about a minute to run the benchmark:
-```bash
-python3 -m modules.eval.megadepth1500 --dataset-dir </data/Mega1500> --matcher xfeat --ransac-thr 2.5
-```
----
-**ScanNet-1500**
-
-To evaluate on the ScanNet eval dataset, you need to first get the dataset:
-```bash
-python3 -m modules.dataset.download --scannet-1500 --download_dir </path/to/desired/folder>
-```
-
-Then, you can call the scannet1500 eval script, it should take a couple of minutes:
-```bash
-python3 -m modules.eval.scannet1500 --scannet_path </data/ScanNet1500> --output </data/ScanNet1500/output> && python3 -m modules.eval.scannet1500 --scannet_path </data/ScanNet1500> --output </data/ScanNet1500/output> --show
-```
-
----
+XFeat evaluation code will be released soon, alongside the training scripts. Please stay tuned.
 
 ## Real-time Demo
 To demonstrate the capabilities of XFeat, we provide a real-time matching demo with Homography registration. Currently, you can experiment with XFeat, ORB and SIFT. You will need a working webcam. To run the demo and show the possible input flags, please run:
@@ -224,13 +199,10 @@ If you find this code useful for your research, please cite the paper:
 
 ```bibtex
 @INPROCEEDINGS{potje2024cvpr,
-  author={Potje, Guilherme and Cadar, Felipe and Araujo, André and Martins, Renato and Nascimento, Erickson R.},
-  booktitle={2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}, 
+  author={Guilherme {Potje} and Felipe {Cadar} and Andre {Araujo} and Renato {Martins} and Erickson R. {Nascimento}},
+  booktitle={2024 IEEE / CVF Computer Vision and Pattern Recognition (CVPR)}, 
   title={XFeat: Accelerated Features for Lightweight Image Matching}, 
-  year={2024},
-  pages={2682-2691},
-  keywords={Visualization;Accuracy;Image matching;Pose estimation;Feature extraction;Hardware;Real-time systems;Image matching;Local features;Lightweight;Fast},
-  doi={10.1109/CVPR52733.2024.00259}}
+  year={2024}}
 ```
 
 ## License
