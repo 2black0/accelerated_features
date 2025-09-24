@@ -4,6 +4,7 @@
 	https://www.verlab.dcc.ufmg.br/descriptors/xfeat_cvpr24/
 """
 
+import inspect
 import numpy as np
 import os
 import torch
@@ -30,7 +31,10 @@ class XFeat(nn.Module):
 		if weights is not None:
 			if isinstance(weights, str):
 				print('loading weights from: ' + weights)
-				self.net.load_state_dict(torch.load(weights, map_location=self.dev))
+				load_kwargs = {'map_location': self.dev}
+				if 'weights_only' in inspect.signature(torch.load).parameters:
+					load_kwargs['weights_only'] = True
+				self.net.load_state_dict(torch.load(weights, **load_kwargs))
 			else:
 				self.net.load_state_dict(weights)
 
